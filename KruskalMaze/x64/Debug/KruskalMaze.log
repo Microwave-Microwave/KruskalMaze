@@ -1,0 +1,12 @@
+﻿  Edge.cpp
+  KruskalMaze.cpp
+  Node.cpp
+  UndirectedGraph.cpp
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\UndirectedGraph.cpp(126,45): warning C4267: '-=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\UndirectedGraph.cpp(127,46): warning C4267: '-=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\UndirectedGraph.cpp(129,24): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\UndirectedGraph.cpp(131,25): warning C4244: 'argument': conversion from 'float' to 'const unsigned __int64', possible loss of data
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\UndirectedGraph.cpp(152,61): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+C:\Users\Felvea\source\repos\KruskalMaze\KruskalMaze\Node.cpp(64): warning C4715: 'Node::GetEdge': not all control paths return a value
+  KruskalMaze.vcxproj -> C:\Users\Felvea\source\repos\KruskalMaze\x64\Debug\KruskalMaze.exe

@@ -66,7 +66,6 @@ UndirectedGraph::UndirectedGraph(int a, int b) //creates a rectangular graph
 				}
 			}
 			
-
 			//create edge below
 			if (y > 0)
 			{

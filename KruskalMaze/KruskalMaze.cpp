@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	//creates a rectangular undirected graph and prints it
+	// creates a rectangular undirected graph and prints it
 	UndirectedGraph graph_rectangle = UndirectedGraph(4, 5);
 	graph_rectangle.PrintMatrixGraph();
 

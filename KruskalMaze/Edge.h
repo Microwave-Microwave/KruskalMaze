@@ -13,4 +13,7 @@ public:
 
 	//constructor
 	Edge(int start, int end, int weight);
+
+	//Functions
+	bool IsIn(vector<Edge*> edges);
 };

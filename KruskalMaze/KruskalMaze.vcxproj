@@ -143,11 +143,13 @@
     <ClCompile Include="KruskalMaze.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="UndirectedGraph.cpp" />
+    <ClCompile Include="VectorDereferencer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="UndirectedGraph.h" />
+    <ClInclude Include="VectorDereferencer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -99,7 +99,7 @@ UndirectedGraph::UndirectedGraph(int a, int b) //creates a rectangular graph
 					(*matrix[y][x]).AddEdge(new Edge(n1.name, n2.name, rnd_weight));
 				}
 			}
-			cout << "edge count: " << (*matrix[y][x]).GetEdges().size() << endl; 
+			//cout << "edge count: " << (*matrix[y][x]).GetEdges().size() << endl; 
 		}
 	}
 

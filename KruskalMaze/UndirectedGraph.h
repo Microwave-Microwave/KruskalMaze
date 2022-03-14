@@ -19,6 +19,11 @@ public:
 	//getters
 	vector<Node> GetNodes(); //returns node vector
 	vector<Edge*> GetEdges();
+	bool HasCircle();
+	bool VectorContainsNode(vector<Node> v, Node n);
+	bool VectorContainsEdge(vector<Edge> v, Edge e);
+	Node GetNode(int n);
+	bool NodeVectorHasCuplicates(vector<Node> v);
 
 	//setters
 	void AddEdgesToNode(vector<Edge> e);
@@ -27,4 +32,7 @@ public:
 
 	void PrintMatrixGraph(); //prints matrix graph
 	UndirectedGraph GetMinimalSpanningTree();
+
+	//TestCases
+	void TestCases();
 };

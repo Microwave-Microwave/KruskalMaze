@@ -21,5 +21,8 @@ int main()
 	UndirectedGraph graph_square = UndirectedGraph(5);
 	graph_square.PrintMatrixGraph();
 	
-	vector<Edge*> edge_test = graph_square.GetEdges();
+	//vector<Edge*> edge_test = graph_square.GetEdges();
+	//UndirectedGraph msp = graph_square.GetMinimalSpanningTree();
+
+	graph_square.TestCases();
 }

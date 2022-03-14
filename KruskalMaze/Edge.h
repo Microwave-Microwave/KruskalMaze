@@ -16,4 +16,5 @@ public:
 
 	//Functions
 	bool IsIn(vector<Edge*> edges);
+	bool IsIn(vector<Edge> edges);
 };

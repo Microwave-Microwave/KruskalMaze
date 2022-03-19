@@ -13,25 +13,34 @@ public:
 
 	//constructor
 	UndirectedGraph(vector<Node *> n);
+	UndirectedGraph(vector<Edge*> e);
+	UndirectedGraph(vector<Edge> e);
 	UndirectedGraph(int a, int b); //rectangular graph
 	UndirectedGraph(int a) : UndirectedGraph(a, a) {}; //square graph
 
 	//getters
-	vector<Node> GetNodes(); //returns node vector
+	vector<Node*> GetNodes(); //returns node vector
 	vector<Edge*> GetEdges();
 	bool HasCircle();
 	bool VectorContainsNode(vector<Node> v, Node n);
+	bool VectorContainsNode(vector<Node*> v, Node n);
 	bool VectorContainsEdge(vector<Edge> v, Edge e);
 	Node GetNode(int n);
+	Node* GetNodePointer(int n);
 	bool NodeVectorHasCuplicates(vector<Node> v);
 
 	//setters
 	void AddEdgesToNode(vector<Edge> e);
+	void AddEdgeToNodes(Edge e);
 
 	//funtions
 
 	void PrintMatrixGraph(); //prints matrix graph
+	void PrintEdges();
 	UndirectedGraph GetMinimalSpanningTree();
+	UndirectedGraph GetMinimalSpanningTree2();
+
+	bool IsEdgeOf(UndirectedGraph g, Edge e);
 
 	//TestCases
 	void TestCases();

@@ -58,3 +58,8 @@ bool Edge::IsIn(vector<Edge> edges)
 
 	return is_in;
 }
+
+void Edge::Print()
+{
+	cout << "edge start/end/weight: " << start << "/" << end << "/" << weight << endl;
+}

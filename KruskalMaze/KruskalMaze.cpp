@@ -18,11 +18,20 @@ int main()
 	Edge e2(1, 2, 3);
 	cout << (e1 == e2) << endl;*/
 
-	UndirectedGraph graph_square = UndirectedGraph(5);
+	UndirectedGraph graph_square = UndirectedGraph(3);
 	graph_square.PrintMatrixGraph();
 	
 	//vector<Edge*> edge_test = graph_square.GetEdges();
-	//UndirectedGraph msp = graph_square.GetMinimalSpanningTree();
+	cout << "MSP\n";
+	UndirectedGraph msp = graph_square.GetMinimalSpanningTree2();
 
-	graph_square.TestCases();
+	cout << "nicasjiodas\n";
+	cout << "actual edges; " << msp.GetEdges().size() << "\n";
+	msp.PrintEdges();
+
+	//graph_square.TestCases();
+
+	
+	
+	
 }

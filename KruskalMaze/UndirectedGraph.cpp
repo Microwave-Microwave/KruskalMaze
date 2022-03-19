@@ -6,10 +6,77 @@
 #include <map>
 #include<iostream>
 
-UndirectedGraph::UndirectedGraph(vector<Node *> n) //creates a graph using vector
+UndirectedGraph::UndirectedGraph(vector<Node *> n) //creates a graph using node vector
 {
 	nodes = n;
 }
+
+UndirectedGraph::UndirectedGraph(vector<Edge*> e) //creates a graph using edge pointer vector
+{
+	//cout << "\nvector size: " << e.size() << "\n";
+	//cout << "edges size : " << GetEdges().size() << "\n";
+	for (int i = 0; i < e.size(); i++)
+	{
+		Node start_node = Node((*e[i]).start);
+		Node end_node = Node((*e[i]).end);
+		//cout << "start node: " << start_node.name << " end node: " << end_node.name << "\n";
+		if (!VectorContainsNode(nodes, start_node))
+		{
+			nodes.push_back(new Node((*e[i]).start));
+			
+		}
+		GetNodePointer(start_node.name)->AddEdge(e[i]);
+
+		if (!VectorContainsNode(nodes, end_node))
+		{
+			nodes.push_back(new Node((*e[i]).end));
+			
+		}
+		GetNodePointer(end_node.name)->AddEdge(e[i]);
+		//cout << "nodes list size: " << nodes.size() << "\n";
+	}
+	//cout << "edges size : " << GetEdges().size() << "\n";
+}
+
+UndirectedGraph::UndirectedGraph(vector<Edge> e_t) //creates a graph using edge vector
+{
+	//cout << "edges size : " << GetEdges().size() << "\n";
+
+	vector<Edge*> e;
+	for (int i = 0; i < e_t.size(); i++)
+	{
+		e.push_back(&e_t[i]);
+	}
+	cout << "\nvector size: " << e.size() << "\n";
+
+
+	for (int i = 0; i < e.size(); i++)
+	{
+		Node start_node = Node((*e[i]).start);
+		Node end_node = Node((*e[i]).end);
+		//cout << "start node: " << start_node.name << " end node: " << end_node.name << "\n";
+		if (!VectorContainsNode(nodes, start_node))
+		{
+			nodes.push_back(new Node((*e[i]).start));
+		}
+		GetNodePointer(start_node.name)->AddEdge(e[i]);
+
+		if (!VectorContainsNode(nodes, end_node))
+		{
+			nodes.push_back(new Node((*e[i]).end));
+		}
+		GetNodePointer(end_node.name)->AddEdge(e[i]);
+		cout << "IMPORTANT WEIGHT1: " << e[i]->weight << "\n";
+		cout << "IMPORTANT WEIGHT2: " << GetNodePointer(end_node.name)->GetEdges()[0]->weight << "\n";
+
+		//e[i]->Print();
+		//cout << "nodes list size: " << nodes.size() << "\n";
+
+	}
+	cout << "edges size nice88 : " << GetEdges().size() << "\n";
+}
+
+
 UndirectedGraph::UndirectedGraph(int a, int b) //creates a rectangular graph
 {
 	//https://i.imgur.com/meAvvp9.png
@@ -99,7 +166,7 @@ UndirectedGraph::UndirectedGraph(int a, int b) //creates a rectangular graph
 					(*matrix[y][x]).AddEdge(new Edge(n1.name, n2.name, rnd_weight));
 				}
 			}
-			//cout << "edge count: " << (*matrix[y][x]).GetEdges().size() << endl; 
+			//cout << "edge count: " << (*matrix[y][x]).GetEdges().size() << "\n"; 
 		}
 	}
 
@@ -109,27 +176,33 @@ UndirectedGraph::UndirectedGraph(int a, int b) //creates a rectangular graph
 	nodes_matrix = matrix;
 }
 
+vector<Node*> UndirectedGraph::GetNodes()
+{
+	return nodes;
+}
+
 vector<Edge*> UndirectedGraph::GetEdges()
 {
-
-	vector<Edge *> all_edges;
-	//cout << "nodes size: " << nodes.size() << endl;
+	vector<Edge*> all_edges;
+	cout << "nodes size GetEdges(): " << nodes.size() << "\n";
 	for (size_t i = 0; i < nodes.size(); i++)
 	{
-		vector<Edge *> edges = (*nodes[i]).GetEdges();
-		//cout << "name: " << (*nodes[i]).name << endl;
-		//cout << "edge size: " << edges.size() << endl;
+		vector<Edge*> edges = (*nodes[i]).GetEdges();
+		//cout << "name: " << (*nodes[i]).name << "\n";
+		//cout << "edge size: " << edges.size() << "\n";
 
 		for (size_t j = 0; j < edges.size(); j++)
 		{
 			if (!(*edges[j]).IsIn(all_edges))
 			{
+				cout << "not in\n";
 				all_edges.push_back(edges[j]);
-				//cout << "weight: " << (*edges[j]).weight << endl;
+				//cout << "weight: " << (*edges[j]).weight << "\n";
+				//(*edges[j]).Print();
 			}
 		}
 	}
-
+	cout << "all edges 555: " << all_edges.size() << "\n";
 	return all_edges;
 }
 
@@ -164,7 +237,7 @@ bool UndirectedGraph::HasCircle()
 
 			if (VectorContainsEdge(edges_visited, e))
 			{
-				//cout << "nicedaiosjdaoisjdoiasjdoasijoidas" << endl;
+				//cout << "nicedaiosjdaoisjdoiasjdoasijoidas\n";
 				return true;
 			}
 			//checks wheter we want to go back where we were
@@ -172,7 +245,7 @@ bool UndirectedGraph::HasCircle()
 			{
 				if (VectorContainsNode(nodes_visited, start))
 				{
-					//cout << "bdaisuhdbasik" << endl;
+					//cout << "bdaisuhdbasik\n";
 					return true;
 				}
 				else
@@ -185,7 +258,7 @@ bool UndirectedGraph::HasCircle()
 			{
 				if (VectorContainsNode(nodes_visited, end))
 				{
-					//cout << "bdaisuhdbasik" << endl;
+					//cout << "bdaisuhdbasik\n";
 					return true;
 				}
 				else
@@ -197,7 +270,7 @@ bool UndirectedGraph::HasCircle()
 
 			edges_visited.push_back(e);
 			//cout << "edge visited start: " << start.name << " end: " << end.name <<
-				//" weight: " << e.weight << endl;
+				//" weight: " << e.weight << "\n";
 		}
 		current_edges.clear();
 		if (NodeVectorHasCuplicates(current_nodes))
@@ -218,7 +291,7 @@ bool UndirectedGraph::HasCircle()
 					current_edges.push_back(e);
 				}
 			}
-			//cout << "visited node: " << n.name << endl;
+			//cout << "visited node: " << n.name << "\n";
 		}
 		last_nodes_visited = current_nodes;
 		current_nodes.clear();
@@ -233,6 +306,29 @@ bool UndirectedGraph::VectorContainsNode(vector<Node> v, Node n)
 	{
 		if (v[i].name == n.name)
 		{
+			return true;
+		}
+	}
+	return contains;
+}
+
+bool UndirectedGraph::VectorContainsNode(vector<Node*> v, Node n)
+{
+	bool contains = false;
+	if (v.size() < 1)
+	{
+		return false;
+	}
+	for (int i = 0; i < v.size(); i++)
+	{
+		if ((*v[i]).name == n.name)
+		{
+			//cout << "vector size: " << v.size() << "\n";
+			for (int j = 0; j < v.size(); j++)
+			{
+				//cout << "nodes in vector: " << v[j]->name << "\n";
+			}
+			//cout << n.name << " is in vector\n";
 			return true;
 		}
 	}
@@ -264,6 +360,17 @@ Node UndirectedGraph::GetNode(int n)
 		if (nodes[i]->name == n)
 		{
 			return *nodes[i];
+		}
+	}
+}
+
+Node* UndirectedGraph::GetNodePointer(int n)
+{
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		if (nodes[i]->name == n)
+		{
+			return nodes[i];
 		}
 	}
 }
@@ -301,8 +408,20 @@ void UndirectedGraph::AddEdgesToNode(vector<Edge> e)
 	*/
 }
 
+void UndirectedGraph::AddEdgeToNodes(Edge e)
+{
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		if ((*nodes[i]).name == e.start || (*nodes[i]).name == e.end)
+		{
+			(*nodes[i]).edges.push_back(&e);
+		}
+	}
+}
+
 void UndirectedGraph::PrintMatrixGraph() //prints graph representable by a matrix
 {
+	cout << "\n";
 	for (size_t y = 0; y < nodes_matrix.size(); y++)
 	{
 		vector<Edge *> edges_t;
@@ -341,7 +460,7 @@ void UndirectedGraph::PrintMatrixGraph() //prints graph representable by a matri
 			}
 		}
 		
-		cout << endl << endl;
+		cout << "\n" << "\n";
 		int space_needed_weights = 12;
 
 		for (size_t i = 0; i < edges_t.size(); i++)
@@ -349,8 +468,97 @@ void UndirectedGraph::PrintMatrixGraph() //prints graph representable by a matri
 			int weight_digits = to_string((*edges_t[i]).weight).length();
 			cout << (*edges_t[i]).weight << string(space_needed_weights - weight_digits, ' ');
 		}
-		cout << endl << endl;
+		cout << "\n" << "\n";
 	}
+}
+
+void UndirectedGraph::PrintEdges()
+{
+	cout << "edges count: " << GetEdges().size() << "\n";
+	for (int i = 0; i < GetEdges().size(); i++)
+	{
+		GetEdges()[i]->Print();
+		//cout << "start/end/weight" << GetEdges()[i]->start << GetEdges()[i]->end
+			//<< GetEdges()[i]->weight << "\n";
+	}
+}
+
+UndirectedGraph UndirectedGraph::GetMinimalSpanningTree2()
+{
+	vector<Node*> mst_nodes;
+
+	VectorDereferencer vd = VectorDereferencer();
+	vector<Edge> edges = vd.DereferenceVector(GetEdges());
+
+
+	sort(edges.begin(),
+		edges.end(),
+		[](const Edge& lhs, const Edge& rhs)
+		{
+			return lhs.weight < rhs.weight;
+		});
+	cout << "EDGES\n";
+
+	for (int i = 0; i < edges.size(); i++)
+	{
+		edges[i].Print();
+	}
+
+	cout << "\n";
+
+	vector<UndirectedGraph> graphs;
+
+	vector<Edge*> edge_collection;
+	for (int i = 0; i < edges.size(); i++)
+	{
+		edge_collection.push_back(&edges[i]);
+	}
+	//cout << "collection size: " << edge_collection.size() << "\n";
+
+	
+
+	cout << "edges vector size44: " << edges.size() << "\n";
+
+	cout << "----------------\n";
+	cout << "mst creation\n";
+	cout << "----------------\n";
+	UndirectedGraph mst = UndirectedGraph(edges);
+	cout << "----------------\n";
+	cout << "mst creation done\n";
+	cout << "----------------\n";
+
+	//edge already is wrong...
+	cout << "weight: " << (*mst.GetNodes()[0]).GetEdges()[0]->weight << "\n";
+
+	cout << "node size: " << mst.GetNodes().size() << "\n";
+	cout << "node1 edges size: " << mst.GetNodes()[0]->GetEdges().size() << "\n";
+	cout << "pls work size: " << mst.GetEdges().size() << "\n";
+
+	cout << "----------------\n";
+	cout << "many edges print\n";
+	cout << "----------------\n";
+
+
+	for (int i = 0; i < mst.GetNodes().size(); i++)
+	{
+		cout << "weight pls work: " << mst.GetNodePointer(i + 1)->GetEdges()[0]->weight << "\n";
+	}
+
+
+	int node_size = mst.GetNodes().size();
+	for (int i = 0; i < node_size; i++)
+	{
+		int edges_size = (*mst.GetNodes()[i]).GetEdges().size();
+		cout << "/////name of node:" << (*mst.GetNodes()[i]).name << "\n";
+		cout << "edges size: " << edges_size << "\n";
+		for (int j = 0; j < edges_size; j++)
+		{
+			(*mst.GetNodes()[i]).GetEdges()[j]->Print();
+			cout << "weight: " << (*mst.GetNodes()[i]).GetEdges()[j]->weight << "\n";
+		}
+	}
+
+	return mst;
 }
 
 UndirectedGraph UndirectedGraph::GetMinimalSpanningTree()
@@ -367,22 +575,84 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTree()
 		{
 			return lhs.weight < rhs.weight;
 		});
+	
+
+	vector<UndirectedGraph> graphs;
 
 	for (int i = 0; i < edges.size(); i++)
 	{
-		cout << "start/end/weight: " << edges[i].start << "/"
-			<< edges[i].end << "/" << edges[i].weight << endl;
+		//edges[i].Print();
+		bool edge_dealth_with = false;
+
+		for (int j = 0; j < graphs.size(); j++)
+		{
+			//cout << "graph cout: " << graphs[j].GetEdges().size() << "\n";
+			if (IsEdgeOf(graphs[j], edges[i]))
+			{
+				cout << "finally\n";
+				UndirectedGraph ug_t = graphs[j];
+				ug_t.AddEdgeToNodes(edges[i]);
+				if (!ug_t.HasCircle())
+				{
+					graphs[j].AddEdgeToNodes(edges[i]);
+					//cout << "oooo\n";
+					edges[i].Print();
+				}
+			}
+		}
+
+		if (edge_dealth_with == false)
+		{
+			vector<Edge*> edge_v;
+			edge_v.push_back(&edges[i]);
+
+			Node n1 = Node(edge_v, edges[i].start);
+			Node n2 = Node(edge_v, edges[i].end);
+
+			vector<Node*> n_t;
+			n_t.push_back(&n1);
+			n_t.push_back(&n2);
+
+			UndirectedGraph ug_t = UndirectedGraph(n_t);
+			graphs.push_back(ug_t);
+			cout << "added single one " << ug_t.GetEdges().size() << "\n";
+		}
 	}
 
 	return UndirectedGraph(mst_nodes);
 }
 
+bool UndirectedGraph::IsEdgeOf(UndirectedGraph g, Edge e)
+{
+	//cout << "nice\n";
+	vector<Edge *> edges_t = g.GetEdges();
+
+	for (int i = 0; i < edges_t.size(); i++)
+	{
+		e.Print();
+		(*edges_t[i]).Print();
+		if ((*edges_t[i]).start == e.start || (*edges_t[i]).start == e.end)
+		{
+			return true;
+		}
+		if ((*edges_t[i]).end == e.start || (*edges_t[i]).end == e.end)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void UndirectedGraph::TestCases()
 {
-	cout << "Test cases" << endl;
+	cout << "\n" << "Test cases\n";
+	cout << "------------------------------\n";
 
+
+	//
 	//https://imgur.com/a/glwuwGc
 	//complex graph small circle
+	//
 
 	cout << "complex graph small circle: ";
 	Edge* e1 = new Edge(1, 2, 3);
@@ -405,31 +675,33 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph1.HasCircle())
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 	else
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 
-
+	//
 	//https://imgur.com/a/o3OU8F3
 	//complex graph no circle
+	//
 	cout << "complex graph no circle: ";
 	UndirectedGraph test_graph2 = UndirectedGraph(vector<Node*>{n1, n2, n4, n5, n6, n7});
 	
 	if (test_graph2.HasCircle())
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 	else
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 
-
+	//
 	//https://imgur.com/a/Kd6SmtH
 	//complex graph big circle
+	//
 	cout << "complex graph big circle: ";
 
 	Edge* e8 = new Edge(3, 7, 9);
@@ -439,15 +711,16 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph3.HasCircle())
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 	else
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 
-
+	//
 	//single graph and double graph is the same in code
+	//
 	cout << "single graph: ";
 
 	n1 = new Node(3);
@@ -456,16 +729,17 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph4.HasCircle())
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 	else
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 
-
+	//
 	//https://imgur.com/5ufVSSj
 	//tri point graph no circle
+	//
 	cout << "tri point graph no circle: ";
 
 	e1 = new Edge(1, 3, 3);
@@ -479,15 +753,17 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph5.HasCircle())
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 	else
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 
+	//
 	//https://imgur.com/a/gt8lPPR
 	//tri point graph has circle
+	//
 	cout << "tri point graph has circle: ";
 
 	e3 = new Edge(1, 2, 20);
@@ -500,13 +776,14 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph6.HasCircle())
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 	else
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 
+	//
 	//https://imgur.com/a/0R5DcS5
 	//rectangular graph has circle
 	//
@@ -526,13 +803,14 @@ void UndirectedGraph::TestCases()
 
 	if (test_graph7.HasCircle())
 	{
-		cout << "successful" << endl;
+		cout << "successful\n";
 	}
 	else
 	{
-		cout << "failed" << endl;
+		cout << "failed\n";
 	}
 
+	//
 	//https://imgur.com/a/7iwfTdm
 	//rectangular graph no circle
 	//
@@ -546,11 +824,69 @@ void UndirectedGraph::TestCases()
 	UndirectedGraph test_graph8 = UndirectedGraph(vector<Node*>{n1, n2, n3, n4});
 
 	if (test_graph8.HasCircle())
+		cout << "failed\n";
+	else
+		cout << "successful\n";
+
+
+	//
+	//https://imgur.com/a/glwuwGc
+	//Test Edge Graph Creation
+	//
+	cout << "Test Edge Graph Creation: ";
+
+	e1 = new Edge(1, 2, 3);
+	e2 = new Edge(2, 3, 10);
+	e3 = new Edge(3, 4, 5);
+	e4 = new Edge(2, 4, 1);
+	e5 = new Edge(4, 5, 4);
+	e6 = new Edge(4, 6, 2);
+	e7 = new Edge(6, 7, 4);
+
+	n1 = new Node(vector<Edge*>{ e1 }, 1);
+	n2 = new Node(vector<Edge*>{ e1, e2, e4 }, 2);
+	n3 = new Node(vector<Edge*>{ e2, e3}, 3);
+	n4 = new Node(vector<Edge*>{ e3, e4, e5, e6 }, 4);
+	n5 = new Node(vector<Edge*>{ e5 }, 5);
+	n6 = new Node(vector<Edge*>{ e6, e7 }, 6);
+	n7 = new Node(vector<Edge*>{ e7, }, 7);
+
+	UndirectedGraph test = UndirectedGraph(vector<Edge*>{e1, e2, e3, e4, e5, e6, e7});
+
+	if (test.GetEdges().size() == 7)
 	{
-		cout << "failed" << endl;
+		cout << "successful\n";
 	}
 	else
 	{
-		cout << "successful" << endl;
+		cout << "failed\n\n";
+		cout << "Edge count should be 7.\n";
+		test.PrintEdges();
 	}
+
+
+	//
+	//Rectangular matrix graph convert to vector graph
+	//
+
+	cout << "Rectangular matrix graph convert to vector graph: ";
+
+	UndirectedGraph graph_rectangular = UndirectedGraph(2, 3);
+	UndirectedGraph graph_vector = UndirectedGraph(graph_rectangular.GetEdges());
+
+	bool graph_conversion_good = true;
+
+	if (graph_vector.GetEdges().size() != graph_vector.GetEdges().size())
+	{
+		graph_conversion_good = false;
+	}
+	
+	//graph_rectangular.PrintMatrixGraph();
+	//graph_vector.PrintEdges();
+
+	if (graph_conversion_good)
+		cout << "successful (same amount of edges)\n";
+	else
+		cout << "failed\n";
+
 }

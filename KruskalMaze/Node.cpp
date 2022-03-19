@@ -64,7 +64,7 @@ Edge* Node::GetEdge(Node n1, Node n2)
 			return edges[i];
 		}
 	}
-	cout << endl << "GetEdge() Edge not found" << endl;
+	cout << endl << "GetEdge() Edge not found\n";
 	return edges[0];
 }
 

@@ -37,6 +37,8 @@ public:
 
 	void PrintMatrixGraph(); //prints matrix graph
 	void PrintEdges();
+	UndirectedGraph GetMinimalSpanningTreeCaveman();
+	UndirectedGraph GetMinimalSpanningTreeCaveman2();
 	UndirectedGraph GetMinimalSpanningTree();
 	UndirectedGraph GetMinimalSpanningTree2();
 

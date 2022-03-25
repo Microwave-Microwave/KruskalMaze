@@ -47,7 +47,7 @@ UndirectedGraph::UndirectedGraph(vector<Edge> e_t) //creates a graph using edge 
 	vector<Edge*> e;
 	for (int i = 0; i < e_t.size(); i++)
 	{
-		e.push_back(&e_t[i]);
+		e.push_back(new Edge(e_t[i].start, e_t[i].end, e_t[i].weight));
 	}
 	//cout << "\nvector size: " << e.size() << "\n";
 
@@ -232,7 +232,7 @@ bool UndirectedGraph::HasCircle()
 	{
 		for (int j = 0; j < current_edges.size(); j++)
 		{
-			
+
 			Edge e = current_edges[j];
 			Node start = GetNode(e.start);
 			Node end = GetNode(e.end);
@@ -298,6 +298,7 @@ bool UndirectedGraph::HasCircle()
 		last_nodes_visited = current_nodes;
 		current_nodes.clear();
 	}
+
 	return false;
 }
 
@@ -535,13 +536,15 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTreeCaveman2()
 	}
 
 
-	
+	//random edges amik csatlakoznak egymashoz
 
 	random_device rd; // obtain a random number from hardware
 	mt19937 gen(rd()); // seed the generator
 	uniform_int_distribution<> distr(0, edges_t.size()-1); // define the range
 
 	cout << "<";
+	cout << "-----1----\n";
+	//PrintEdges();
 	bool big_loop = true;
 	while (big_loop)
 	{
@@ -554,27 +557,39 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTreeCaveman2()
 			{
 				int rnd_edge = distr(gen);
 
-				if (!edges_t[rnd_edge]->IsIn(maze))
+				if (maze.size() == 0)
 				{
 					maze.push_back(edges_t[rnd_edge]);
 					loop = false;
 				}
+				else if (!edges_t[rnd_edge]->IsIn(maze) && IsConnected(edges_t[rnd_edge], maze[maze.size() - 1]))
+				{
+					maze.push_back(edges_t[rnd_edge]);
+					loop = false;
+					//&& IsConnected(edges_t[rnd_edge], maze[maze.size() - 1])
+				}
+
+				
 			}
 		}
 		msp_edges = maze;
 		UndirectedGraph ug_maze = UndirectedGraph(maze);
+		
+		
 		if (!ug_maze.HasCircle())
 		{
 			cout << ">\n";
 			big_loop = false;
-			//ug_maze.PrintEdges();
+			ug_maze.PrintEdges();
 		}
 		else
 		{
 			cout << "o";
 		}
+		
 	}
-	
+	cout << "-----2----\n";
+
 	
 	//FULL MAZE MATRIX DRAW
 	char normal_cell = 'x';
@@ -755,6 +770,236 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTreeCaveman2()
 	return UndirectedGraph(nodes);
 }
 
+UndirectedGraph UndirectedGraph::GetMinimalSpanningTreeCaveman3()
+{
+	vector<Node*> nodes_t = nodes;
+	vector<Edge*> edges_t = GetEdges();
+	vector<Edge*> msp_edges = GetEdges();
+
+
+	for (int i = 0; i < edges_t.size(); i++)
+	{
+		//edges_t[i]->Print();
+	}
+
+
+	//random edges amik csatlakoznak egymashoz
+
+	random_device rd; // obtain a random number from hardware
+	mt19937 gen(rd()); // seed the generator
+	uniform_int_distribution<> distr(0, edges_t.size() - 1); // define the range
+
+	cout << "-----1----\n";
+	vector<Edge*> maze;
+
+	for (int i = 0; i < nodes_t.size() - 1; i++)
+	{
+
+		bool loop = true;
+		while (loop)
+		{
+			uniform_int_distribution<> distr(0, edges_t.size() - 1);
+			int rnd_edge = distr(gen);
+
+			if (maze.size() == 0)
+			{
+				maze.push_back(edges_t[rnd_edge]);
+				edges_t.erase(edges_t.begin() + rnd_edge);
+				loop = false;
+			}
+			else if (IsConnected(edges_t[rnd_edge], maze[maze.size() - 1]))
+			{
+				maze.push_back(edges_t[rnd_edge]);
+				edges_t.erase(edges_t.begin() + rnd_edge);
+				loop = false;
+			}
+		}
+	}
+	msp_edges = maze;
+	UndirectedGraph ug_maze = UndirectedGraph(maze);
+	ug_maze.PrintEdges();
+	cout << "-----2----\n";
+
+
+	//FULL MAZE MATRIX DRAW
+	char normal_cell = 'x';
+	char edge_cell = 'e';
+	char empty_cell = ' ';
+	string spacing = " ";
+
+	int y_size = nodes_matrix.size();
+	int x_size = nodes_matrix[0].size();
+
+	vector<string> full_maze_matrix;
+	vector<string> empty_maze_matrix;
+
+	for (int i = 0; i < y_size * 2 + 1; i++)
+	{
+		string row = "";
+		for (int j = 0; j < x_size * 2 + 1; j++)
+		{
+			row += normal_cell;
+		}
+		full_maze_matrix.push_back(row);
+	}
+
+
+
+
+
+	//cout << "x_size: " << x_size << "\n";
+	//cout << "y_size: " << y_size << "\n";
+	//EDGE MATRIX
+	//for (int i = 0; i < 1; i++)
+	for (int i = 0; i < msp_edges.size(); i++)
+	{
+		//start and end node name
+		int n1 = msp_edges[i]->start; //7
+		int n2 = msp_edges[i]->end; //8
+
+		//positions of the nodes
+
+
+		int n1_x = n1 % x_size - 1;
+		int n1_y = n1 / x_size;
+		int n2_x = n2 % x_size - 1;
+		int n2_y = n2 / x_size;
+
+
+		if (n1_x < 0)
+		{
+			n1_x = x_size - 1;
+		}
+		if (n2_x < 0)
+		{
+			n2_x = x_size - 1;
+		}
+		if (n1 % x_size == 0 && n1 / x_size > 1)
+		{
+			n1_y--;
+		}
+		if (n2 % x_size == 0 && n2_y > 1)
+		{
+			n2_y--;
+		}
+
+		//adjust to big matrix
+
+		//0-2	1-2		2-2		2-1
+		//1-5	3-5		5-5		5-3
+		//* 2 + 1 is for adjustion for the bigger grid
+		n1_x = n1_x * 2 + 1;
+		n1_y = n1_y * 2 + 1;
+		n2_x = n2_x * 2 + 1;
+		n2_y = n2_y * 2 + 1;
+
+		//full_maze_matrix[n1_y][n1_x] = 'n';
+		//full_maze_matrix[n2_y][n2_x] = 'n';
+
+		int edge_x = 0;
+		int edge_y = 0;
+		//cout << "n1y: " << n1_y << "   n2y: " << n2_y << "\n";
+
+		if (n1_x == n2_x)
+		{
+			edge_x = n1_x;
+			if (n1_y > n2_y)
+			{
+				edge_y = n2_y + 1;
+			}
+			else
+			{
+				edge_y = n1_y + 1;
+			}
+
+		}
+		else
+		{
+			edge_y = n1_y;
+			if (n1_x > n2_x)
+			{
+				edge_x = n2_x + 1;
+			}
+			else
+			{
+				edge_x = n1_x + 1;
+			}
+		}
+
+
+		//cout << "n1y: " << n1_y << "   n2y: " << n2_y << "\n";
+		//msp_edges[i]->Print();
+		//cout << "edge_y: " << edge_y << "   edge_x: " << edge_x << "\n";
+		full_maze_matrix[edge_y][edge_x] = edge_cell;
+	}
+
+	cout << "\nfull maze edges:\n";
+	for (int i = 0; i < full_maze_matrix.size(); i++)
+	{
+		for (int j = 0; j < full_maze_matrix[0].size(); j++)
+		{
+			cout << full_maze_matrix[i][j] << spacing;
+		}
+		cout << "\n";
+	}
+
+	//create emptz maze and substract edges
+	for (int i = 0; i < y_size * 2 + 1; i++)
+	{
+		string row = "";
+		for (int j = 0; j < x_size * 2 + 1; j++)
+		{
+			if (i % 2 == 0)
+			{
+				row += normal_cell;
+			}
+			else
+			{
+				if (j % 2 == 0)
+				{
+
+					row += "x";
+				}
+				else
+				{
+					row += " ";
+				}
+
+			}
+
+		}
+		empty_maze_matrix.push_back(row);
+	}
+
+	cout << "subtraction\n";
+	for (int i = 0; i < y_size * 2 + 1; i++)
+	{
+		for (int j = 0; j < x_size * 2 + 1; j++)
+		{
+			if (full_maze_matrix[i][j] == edge_cell)
+			{
+				//cout << "bro\n";
+				empty_maze_matrix[i][j] = empty_cell;
+			}
+		}
+	}
+
+
+	cout << "\nempty maze edges:\n";
+	for (int i = 0; i < full_maze_matrix.size(); i++)
+	{
+		for (int j = 0; j < full_maze_matrix[0].size(); j++)
+		{
+			cout << empty_maze_matrix[i][j] << spacing;
+		}
+		cout << "\n";
+	}
+
+
+
+	return UndirectedGraph(nodes);
+}
+
 UndirectedGraph UndirectedGraph::GetMinimalSpanningTree2()
 {
 	vector<Node*> mst_nodes;
@@ -786,7 +1031,7 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTree2()
 		edge_collection.push_back(&edges[i]);
 	}
 	//cout << "collection size: " << edge_collection.size() << "\n";
-
+	cout << &edges[0] << endl;
 	
 
 	cout << "edges vector size44: " << edges.size() << "\n";
@@ -795,11 +1040,15 @@ UndirectedGraph UndirectedGraph::GetMinimalSpanningTree2()
 	cout << "mst creation\n";
 	cout << "----------------\n";
 	UndirectedGraph mst = UndirectedGraph(edges);
+	cout << mst.GetEdges().size() << endl;
 	cout << "----------------\n";
 	cout << "mst creation done\n";
 	cout << "----------------\n";
+	cout << &edges[0] << endl;
 
 	//edge already is wrong...
+	cout << "-------------------------wrong\n";
+	//mst.PrintEdges();
 	cout << "weight: " << (*mst.GetNodes()[0]).GetEdges()[0]->weight << "\n";
 
 	cout << "node size: " << mst.GetNodes().size() << "\n";
@@ -902,7 +1151,7 @@ bool UndirectedGraph::IsEdgeOf(UndirectedGraph g, Edge e)
 	for (int i = 0; i < edges_t.size(); i++)
 	{
 		e.Print();
-		(*edges_t[i]).Print();
+		(*edges_t[i]).Print(); 
 		if ((*edges_t[i]).start == e.start || (*edges_t[i]).start == e.end)
 		{
 			return true;
@@ -911,6 +1160,27 @@ bool UndirectedGraph::IsEdgeOf(UndirectedGraph g, Edge e)
 		{
 			return true;
 		}
+	}
+	return false;
+}
+
+bool UndirectedGraph::IsConnected(Edge* e1, Edge* e2)
+{
+	if (e1->start == e2->start)
+	{
+		return true;
+	}
+	if (e1->end == e2->start)
+	{
+		return true;
+	}
+	if (e1->start == e2->end)
+	{
+		return true;
+	}
+	if (e1->end == e2->end)
+	{
+		return true;
 	}
 	return false;
 }

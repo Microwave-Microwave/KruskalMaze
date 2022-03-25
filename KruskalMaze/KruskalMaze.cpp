@@ -25,7 +25,12 @@ int main()
 	cout << "---------------------------------\n";
 	cout << "MST\n";
 	cout << "---------------------------------\n";
-	UndirectedGraph msp = graph_square.GetMinimalSpanningTreeCaveman2();
+	UndirectedGraph msp = graph_square.GetMinimalSpanningTreeCaveman3();
+
+	Edge e1 = Edge(1, 2, 4);
+	Edge e2 = Edge(3, 4, 4);
+	if (graph_square.IsConnected(&e1, &e2))
+		cout << "nice" << endl;
 
 	/*
 	cout << "nicasjiodas\n";

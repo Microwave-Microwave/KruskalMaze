@@ -39,10 +39,12 @@ public:
 	void PrintEdges();
 	UndirectedGraph GetMinimalSpanningTreeCaveman();
 	UndirectedGraph GetMinimalSpanningTreeCaveman2();
+	UndirectedGraph GetMinimalSpanningTreeCaveman3();
 	UndirectedGraph GetMinimalSpanningTree();
 	UndirectedGraph GetMinimalSpanningTree2();
 
 	bool IsEdgeOf(UndirectedGraph g, Edge e);
+	bool IsConnected(Edge* e1, Edge* e2);
 
 	//TestCases
 	void TestCases();
